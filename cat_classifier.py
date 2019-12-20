@@ -14,7 +14,7 @@ from PIL import Image
 from scipy import ndimage
 from lr_utils import load_dataset
 
-#%matplotlib inline
+import cv2
 
 # Cargamos los datos
 train_set_x_orig, train_set_y, test_set_x_orig, test_set_y, classes = load_dataset()
@@ -255,3 +255,16 @@ for index in [20, 21, 22, 23, 24, 25, 30]:
     print ("y = " + str(test_set_y[0,index]) + ", la prediccion es que " + gato)
     plt.title("y = " + str(test_set_y[0,index]) + ", la prediccion es que " + gato)
     plt.show()
+
+#Para probar con una imagen en concreto
+my_image = "mapache.jpg"  
+
+fname = "images/" + my_image
+image = np.array(cv2.imread(fname))
+image = image/255.
+my_image = cv2.resize(image, dsize=(num_px,num_px)).reshape((1, num_px*num_px*3)).T
+my_predicted_image = predict(d["w"], d["b"], my_image)
+
+plt.imshow(image)
+plt.title("y = " + str(np.squeeze(my_predicted_image)) + ", el algoritmo ha predecido que es a \"" + classes[int(np.squeeze(my_predicted_image)),].decode("utf-8") +  "\" foto.")
+plt.show()
